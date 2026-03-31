@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="tebenkova_Models.Models.Partner" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAQCAAAAAAAAAAAAQCAAAIAAEkABABIAAAAAA=</HashCode>
+      <FileName>Models\Partner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.PartnerType" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\PartnerType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.Product" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>KAADAAAQAQAgAYAQIAIAAAQCkAAAAAAAAAAAAAAgAAI=</HashCode>
+      <FileName>Models\Product.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.ProductType" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Models\ProductType.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.SaleHistory" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAACAAAACAAUAAAAAAAAAAAAAAAAAAAAAAAAgAEAAAg=</HashCode>
+      <FileName>Models\SaleHistory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.StockIssue" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAiAAAAAAAgAAIAAAAAAAAAAAQAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\StockIssue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.StockReceipt" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAiAAAAAQAQAIAAAAAAAAAAAAQAAAAAAAAAgAAgAAA=</HashCode>
+      <FileName>Models\StockReceipt.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Models.Models.Supplier" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAABAAAAAQAgAAIAAECAAAAIAAAAAQ=</HashCode>
+      <FileName>Models\Supplier.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="tebenkova_Models.Interfaces.IPartnerRepository" Collapsed="true">
+    <Position X="4" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAIAAAAAABAAAAAAAAAEAAEIAAAgAAAAAAAAAIIA=</HashCode>
+      <FileName>Interfaces\IPartnerRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="tebenkova_Models.Interfaces.IPartnerService" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAFAAAAAAAAACIAAAAAAAAAIAAAAAEIAAAAAAAA=</HashCode>
+      <FileName>Interfaces\IPartnerService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="tebenkova_Models.Interfaces.IProductRepository" Collapsed="true">
+    <Position X="2.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAIIAAAAABAAAAAAAAAEAAAIgAAgAAAAAAAAAIIA=</HashCode>
+      <FileName>Interfaces\IProductRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="tebenkova_Models.Interfaces.ISaleHistoryRepository" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAkAAAAAAAAAAAAAAAAgAAEAAAAAAAgAAAAABAAQIIA=</HashCode>
+      <FileName>Interfaces\ISaleHistoryRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="tebenkova_Models.Interfaces.ISupplierRepository" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAIAAAAAABAAAAAAAAAEAAAAAAAgAAABAIAAAIIA=</HashCode>
+      <FileName>Interfaces\ISupplierRepository.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="tebenkova_Models.Enums.DiscountType" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAEAAAE=</HashCode>
+      <FileName>Enums\DiscountType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

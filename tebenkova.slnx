@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="tebenkova_Data/tebenkova_Data.csproj" Id="fee60b19-a70d-4e60-8010-7b2f03bb1a3d" />
+  <Project Path="tebenkova_Models/tebenkova_Models.csproj" Id="67953bfe-41e2-4c77-aa72-1d0d47afe20c" />
+  <Project Path="tebenkova_Services/tebenkova_Services.csproj" Id="01b45215-9b7b-4234-85e7-f3cbb75daacc" />
+  <Project Path="tebenkova_Tests/tebenkova_Tests.csproj" Id="11d5f9fa-a6d3-4e5d-a15e-e35e70a116dd" />
+  <Project Path="tebenkova_wpf/tebenkova_wpf.csproj" Id="036f2279-e797-485c-a9dd-4b6e11c59df2" />
+</Solution>

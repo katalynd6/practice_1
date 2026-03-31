@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="tebenkova_Services.DTOs.PartnerDto" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAAAAAAAAAQAAQCAAAAADEAAgAAIAAAAAA=</HashCode>
+      <FileName>DTOs\PartnerDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.PartnerDetailDto" Collapsed="true">
+    <Position X="3.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAIAAAEAAABAAAAAAA=</HashCode>
+      <FileName>DTOs\PartnerDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.PartnerStatisticsDto" Collapsed="true">
+    <Position X="9.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAEEAAQAAAAQAAAAAAAAAgAAAgAAAAgAAAA=</HashCode>
+      <FileName>DTOs\PartnerDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.ProductDto" Collapsed="true">
+    <Position X="11.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAADAAAQAQAAAQAQIAIAAIQAEAAAAAAAAIAAAAAACAI=</HashCode>
+      <FileName>DTOs\ProductDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.StockSummaryDto" Collapsed="true">
+    <Position X="6" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAgAAAQAQAABAAAAAABAAAAAAA=</HashCode>
+      <FileName>DTOs\ProductDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.ProductSalesDto" Collapsed="true">
+    <Position X="6" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAgAAIAAA=</HashCode>
+      <FileName>DTOs\ProductDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.DashboardSummaryDto" Collapsed="true">
+    <Position X="7.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgIAAAAAAAAAAAAQAAAAAAAABgAAAAAAAAAIwAA=</HashCode>
+      <FileName>DTOs\ReportDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SalesReportDto" Collapsed="true">
+    <Position X="11.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAgAAIAEgAAAAAAAEAAAAA=</HashCode>
+      <FileName>DTOs\ReportDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SaleDto" Collapsed="true">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAAAAABAAAAgAAIAAA=</HashCode>
+      <FileName>DTOs\SaleDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SaleHistoryDto" Collapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAQAAAAAAAAAAAAAAAAAAQAAAAAAAgAkIAAA=</HashCode>
+      <FileName>DTOs\SaleHistoryDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.DailySalesDto" Collapsed="true">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQAAAAAACAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\SaleHistoryDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SupplierDto" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAABAACAAAAAABAAAAAQAAAAAAAEAAAAAIAAAAAA=</HashCode>
+      <FileName>DTOs\SupplierDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SupplierDetailDto" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIAAACAAAAAAAAAAQ=</HashCode>
+      <FileName>DTOs\SupplierDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.SupplierStatisticsDto" Collapsed="true">
+    <Position X="7.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAgAAAQAAAABAEAAIAAAAAgAAA=</HashCode>
+      <FileName>DTOs\SupplierDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.DTOs.WarehouseItemDto" Collapsed="true">
+    <Position X="9.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAIAAAAIAAA=</HashCode>
+      <FileName>DTOs\WarehouseItemDto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Helpers.DiscountHelper" Collapsed="true">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\DiscountHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Helpers.ExportHelper" Collapsed="true">
+    <Position X="2.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAQAAAACAAAEAAAAAAAAQAA=</HashCode>
+      <FileName>Helpers\ExportHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Helpers.ValidationHelper" Collapsed="true">
+    <Position X="0.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAA=</HashCode>
+      <FileName>Helpers\ValidationHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Mappings.MappingProfile" Collapsed="true">
+    <Position X="4.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAABAAAAEAAAAA=</HashCode>
+      <FileName>Mappings\MappingProfile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Services.DiscountCalculatorService" Collapsed="true">
+    <Position X="6" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\DiscountCalculatorService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Services.PartnerService" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="7.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAFCAAAAAAAACIAAAAAAAAAIAAAAAEIQAAgAAAA=</HashCode>
+      <FileName>Services\PartnerService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="tebenkova_Services.Services.ProductService" Collapsed="true">
+    <Position X="9.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAoAAAAAIAAAAAQAAAkIAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>Services\ProductService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Services.ReportService" Collapsed="true">
+    <Position X="6" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAgAAAACIAAAAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Services\ReportService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tebenkova_Services.Services.SupplierService" Collapsed="true">
+    <Position X="7.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABgBAAAAIAAAAAAEAAAAAAAAAABAAAAACAACAAAAAAA=</HashCode>
+      <FileName>Services\SupplierService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

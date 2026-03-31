@@ -1,0 +1,12 @@
+# .NET / Visual Studio
+bin/
+obj/
+packages/
+TestResults/
+.vs/
+*.user
+*.suo
+*.sln.docstates
+**/*.DLL
+**/*.pdb
+**/*.exe
