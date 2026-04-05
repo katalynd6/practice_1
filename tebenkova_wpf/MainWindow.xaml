@@ -10,61 +10,7 @@
 
     <Window.Resources>
         <converters:DiscountToColorConverter x:Key="DiscountToColorConverter"/>
-
-        <!-- Стиль для кнопок -->
-        <Style x:Key="ActionButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Width" Value="120"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border x:Name="border" 
-                                Background="{TemplateBinding Background}" 
-                                CornerRadius="6"
-                                BorderThickness="0">
-                            <ContentPresenter HorizontalAlignment="Center" 
-                                            VerticalAlignment="Center"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Opacity" Value="0.85"/>
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Opacity" Value="0.7"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!-- Стиль для текстового поля поиска -->
-        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
-            <Setter Property="Height" Value="38"/>
-            <Setter Property="Width" Value="250"/>
-            <Setter Property="Margin" Value="5"/>
-            <Setter Property="Padding" Value="8,0"/>
-            <Setter Property="FontSize" Value="13"/>
-            <Setter Property="BorderBrush" Value="#CCCCCC"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="BorderBrush" Value="#4CAF50"/>
-                </Trigger>
-                <Trigger Property="IsFocused" Value="True">
-                    <Setter Property="BorderBrush" Value="#4CAF50"/>
-                    <Setter Property="BorderThickness" Value="2"/>
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+        <converters:StatusColorConverter x:Key="StatusColorConverter"/>
 
         <!-- Стиль для заголовков вкладок -->
         <Style x:Key="TabHeaderStyle" TargetType="TabItem">
@@ -130,6 +76,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -149,54 +96,61 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Логотип -->
                 <Border Grid.Column="0" 
                         Background="#4CAF50" 
                         Width="50" Height="50" 
                         CornerRadius="25"
                         HorizontalAlignment="Left">
-                    <TextBlock Text="🌿" 
-                               FontSize="28" 
-                               HorizontalAlignment="Center" 
-                               VerticalAlignment="Center"
-                               Foreground="White"/>
+                    <TextBlock Text="🌿" FontSize="28" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
                 </Border>
 
-                <!-- Название -->
-                <StackPanel Grid.Column="1" 
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Center"
-                            Margin="20,0">
-                    <TextBlock Text="ООО Цветы Прикамья" 
-                               FontSize="24" 
-                               FontWeight="Bold" 
-                               Foreground="#2E7D32"/>
-                    <TextBlock Text="Система учета партнеров и расчета скидок" 
-                               FontSize="13" 
-                               Foreground="#666666"
-                               HorizontalAlignment="Center"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20,0">
+                    <TextBlock Text="ООО Цветы Прикамья" FontSize="24" FontWeight="Bold" Foreground="#2E7D32"/>
+                    <TextBlock Text="Система учета партнеров и расчета скидок" FontSize="13" Foreground="#666666" HorizontalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Дата и время -->
-                <StackPanel Grid.Column="2" 
-                            VerticalAlignment="Center" 
-                            HorizontalAlignment="Right">
-                    <TextBlock x:Name="TxtCurrentDate" 
-                               Text="13.03.2026" 
-                               FontSize="16" 
-                               FontWeight="SemiBold"
-                               Foreground="#2E7D32"/>
-                    <TextBlock x:Name="TxtCurrentTime" 
-                               Text="14:30:25" 
-                               FontSize="13" 
-                               Foreground="#666666"
-                               HorizontalAlignment="Right"/>
+                <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <TextBlock x:Name="TxtCurrentDate" Text="13.03.2026" FontSize="16" FontWeight="SemiBold" Foreground="#2E7D32"/>
+                    <TextBlock x:Name="TxtCurrentTime" Text="14:30:25" FontSize="13" Foreground="#666666" HorizontalAlignment="Right"/>
                 </StackPanel>
             </Grid>
         </Border>
 
+        <!-- ========== ГОРИЗОНТАЛЬНОЕ МЕНЮ ========== -->
+        <Menu Grid.Row="1" Margin="0,0,0,10" Background="#F5F5F5" BorderThickness="0">
+            <MenuItem Header="📁 Файл">
+                <MenuItem Header="🚪 Выход" Click="ExitMenuItem_Click" InputGestureText="Alt+F4"/>
+            </MenuItem>
+
+            <MenuItem Header="🤝 Партнеры">
+                <MenuItem Header="➕ Добавить партнера" Click="AddPartnerMenuItem_Click" InputGestureText="Ctrl+N"/>
+                <MenuItem Header="✏️ Редактировать партнера" Click="EditPartnerMenuItem_Click" InputGestureText="Ctrl+E"/>
+                <MenuItem Header="🗑️ Удалить партнера" Click="DeletePartnerMenuItem_Click" InputGestureText="Del"/>
+                <Separator/>
+                <MenuItem Header="🔄 Обновить список" Click="RefreshPartnersMenuItem_Click" InputGestureText="F5"/>
+            </MenuItem>
+
+            <MenuItem Header="📦 Товары">
+                <MenuItem Header="➕ Добавить товар" Click="AddProductMenuItem_Click" InputGestureText="Ctrl+Shift+N"/>
+                <MenuItem Header="✏️ Редактировать товар" Click="EditProductMenuItem_Click" InputGestureText="Ctrl+Shift+E"/>
+                <MenuItem Header="🗑️ Удалить товар" Click="DeleteProductMenuItem_Click" InputGestureText="Shift+Del"/>
+                <Separator/>
+                <MenuItem Header="🔄 Обновить список" Click="RefreshProductsMenuItem_Click" InputGestureText="Ctrl+F5"/>
+            </MenuItem>
+
+            <MenuItem Header="📊 Отчеты">
+                <MenuItem Header="📈 По продажам" Click="SalesReportMenuItem_Click"/>
+                <MenuItem Header="💰 Финансовый" Click="FinanceReportMenuItem_Click"/>
+                <MenuItem Header="🏪 Складской" Click="WarehouseReportMenuItem_Click"/>
+            </MenuItem>
+
+            <MenuItem Header="❓ Справка">
+                <MenuItem Header="ℹ️ О программе" Click="AboutMenuItem_Click"/>
+            </MenuItem>
+        </Menu>
+
         <!-- Вкладки -->
-        <TabControl Grid.Row="1" 
+        <TabControl Grid.Row="2" 
                     x:Name="MainTabControl"
                     Margin="0,0,0,10"
                     Background="Transparent"
@@ -208,16 +162,15 @@
         </TabControl>
 
         <!-- Контейнер для содержимого вкладок -->
-        <ContentControl Grid.Row="2" x:Name="TabContentArea"/>
+        <ContentControl Grid.Row="3" x:Name="TabContentArea"/>
 
         <!-- Статус бар -->
-        <StatusBar Grid.Row="3" 
+        <StatusBar Grid.Row="4" 
                    Background="White" 
                    Height="32" 
                    Margin="0,10,0,0"
                    BorderBrush="#DDDDDD"
-                   BorderThickness="1"
-                   >
+                   BorderThickness="1">
             <StatusBarItem>
                 <StackPanel Orientation="Horizontal">
                     <Ellipse Width="8" Height="8" Fill="#4CAF50" Margin="0,0,5,0"/>
@@ -225,9 +178,7 @@
                 </StackPanel>
             </StatusBarItem>
             <StatusBarItem HorizontalAlignment="Right">
-                <TextBlock Text="Производственная практика 2026 | ООО Цветы Прикамья" 
-                           FontSize="10" 
-                           Foreground="#999999"/>
+                <TextBlock Text="Производственная практика 2026 | ООО Цветы Прикамья" FontSize="10" Foreground="#999999"/>
             </StatusBarItem>
         </StatusBar>
     </Grid>

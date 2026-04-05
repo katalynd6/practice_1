@@ -6,7 +6,6 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using tebenkova_Models.Models;
 using tebenkova_Services.DTOs;
 using tebenkova_wpf.Converters;
 
@@ -56,25 +55,109 @@ namespace tebenkova_wpf
                 LoadReportsTab();
         }
 
-        // ==================== ОБЩИЕ МЕТОДЫ ====================
-        private Button CreateButton(string text, string color, RoutedEventHandler clickHandler)
+        // ==================== ОБРАБОТЧИКИ МЕНЮ ====================
+
+        private void ExitMenuItem_Click(object sender, RoutedEventArgs e)
         {
-            var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
-            var button = new Button
-            {
-                Content = text,
-                Height = 38,
-                Width = 120,
-                Margin = new Thickness(5),
-                Background = brush,
-                Foreground = Brushes.White,
-                FontWeight = FontWeights.SemiBold,
-                BorderThickness = new Thickness(0),
-                Cursor = System.Windows.Input.Cursors.Hand
-            };
-            button.Click += clickHandler;
-            return button;
+            var result = MessageBox.Show("Вы уверены, что хотите выйти?", "Выход",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+            if (result == MessageBoxResult.Yes)
+                Application.Current.Shutdown();
         }
+
+        private void AddPartnerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowAddPartner();
+        }
+
+        private void EditPartnerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowEditPartner();
+        }
+
+        private void DeletePartnerMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            DeletePartner();
+        }
+
+        private void RefreshPartnersMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshPartners();
+        }
+
+        private void AddProductMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowAddProduct();
+        }
+
+        private void EditProductMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowEditProduct();
+        }
+
+        private void DeleteProductMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            DeleteProduct();
+        }
+
+        private void RefreshProductsMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            RefreshProducts();
+        }
+
+        private void SalesReportMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowReport("sales");
+        }
+
+        private void FinanceReportMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowReport("finance");
+        }
+
+        private void WarehouseReportMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowReport("warehouse");
+        }
+
+        private void AboutMenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("ООО Цветы Прикамья\nСистема учета партнеров\nВерсия 2.0\n\nПроизводственная практика 2026",
+                "О программе", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        // ==================== МЕТОД SHOWREPORT ====================
+
+        private void ShowReport(string reportType)
+        {
+            switch (reportType)
+            {
+                case "sales":
+                    if (_salesData == null) _salesData = GetTestSalesData();
+                    var totalSales = _salesData.Sum(s => s.Amount);
+                    MessageBox.Show($"📊 Отчет по продажам\n\nОбщая выручка: {totalSales:N2} ₽\nКоличество продаж: {_salesData.Count}",
+                        "Отчет по продажам", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+
+                case "finance":
+                    if (_salesData == null) _salesData = GetTestSalesData();
+                    var financeTotal = _salesData.Sum(s => s.Amount);
+                    decimal profitMargin = 0.3m;
+                    MessageBox.Show($"💰 Финансовый отчет\n\nВыручка: {financeTotal:N2} ₽\nПрибыль (30%): {financeTotal * profitMargin:N2} ₽\nРентабельность: 30%",
+                        "Финансовый отчет", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+
+                case "warehouse":
+                    if (_warehouseItems == null) LoadWarehouseData();
+                    var needToBuy = _warehouseItems.Count(w => w.Status == "Требуется закуп" || w.Status == "Отсутствует");
+                    var totalStock = _warehouseItems.Sum(w => w.CurrentStock);
+                    MessageBox.Show($"🏪 Складской отчет\n\nТребуется закупить: {needToBuy} позиций\nВсего товаров на складе: {totalStock} шт\nКритических запасов: {_warehouseItems.Count(w => w.CurrentStock == 0)}",
+                        "Складской отчет", MessageBoxButton.OK, MessageBoxImage.Information);
+                    break;
+            }
+        }
+
+        // ==================== ОБЩИЕ МЕТОДЫ ====================
 
         private DataGrid GetCurrentDataGrid()
         {
@@ -90,15 +173,16 @@ namespace tebenkova_wpf
         }
 
         // ==================== ВКЛАДКА ПАРТНЕРЫ ====================
+
         private void LoadPartnersTab()
         {
             var grid = new Grid();
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            var toolbar = CreatePartnersToolbar();
-            Grid.SetRow(toolbar, 0);
-            grid.Children.Add(toolbar);
+            var searchPanel = CreateSearchPanel("partners");
+            Grid.SetRow(searchPanel, 0);
+            grid.Children.Add(searchPanel);
 
             var dataGrid = CreatePartnersDataGrid();
             Grid.SetRow(dataGrid, 1);
@@ -108,41 +192,45 @@ namespace tebenkova_wpf
             LoadPartnersData(dataGrid);
         }
 
-        private StackPanel CreatePartnersToolbar()
+        private StackPanel CreateSearchPanel(string target)
         {
             var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
 
-            panel.Children.Add(CreateButton("➕ Добавить", "#4CAF50", (s, e) => ShowAddPartner()));
-            panel.Children.Add(CreateButton("✏️ Редактировать", "#2196F3", (s, e) => ShowEditPartner()));
-            panel.Children.Add(CreateButton("🗑️ Удалить", "#F44336", (s, e) => DeletePartner()));
-            panel.Children.Add(CreateButton("🔄 Обновить", "#FF9800", (s, e) => RefreshPartners()));
-
-            panel.Children.Add(new Rectangle
+            panel.Children.Add(new TextBlock
             {
-                Width = 1,
-                Height = 30,
-                Fill = Brushes.LightGray,
-                Margin = new Thickness(10, 0, 10, 0),
-                VerticalAlignment = VerticalAlignment.Center
+                Text = "🔍 Поиск:",
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(5),
+                FontSize = 13,
+                FontWeight = FontWeights.SemiBold
             });
 
             var searchBox = new TextBox
             {
-                Width = 250,
-                Height = 38,
+                Width = 300,
+                Height = 35,
                 Margin = new Thickness(5),
-                Padding = new Thickness(8, 0, 8, 0),
-                VerticalContentAlignment = VerticalAlignment.Center
+                Padding = new Thickness(10, 0, 10, 0),
+                VerticalContentAlignment = VerticalAlignment.Center,
+                FontSize = 13,
+                Tag = target
             };
-            searchBox.TextChanged += (s, e) => SearchPartners(searchBox.Text);
+
+            if (target == "partners")
+                searchBox.TextChanged += (s, e) => SearchPartners(searchBox.Text);
+            else if (target == "products")
+                searchBox.TextChanged += (s, e) => SearchProducts(searchBox.Text);
+
             panel.Children.Add(searchBox);
 
             panel.Children.Add(new TextBlock
             {
-                Text = "🔍",
+                Text = "💡 Совет: выберите запись → меню → действие",
                 VerticalAlignment = VerticalAlignment.Center,
-                FontSize = 16,
-                Margin = new Thickness(0, 0, 5, 0)
+                Margin = new Thickness(15, 0, 0, 0),
+                FontSize = 11,
+                Foreground = Brushes.Gray,
+                FontStyle = FontStyles.Italic
             });
 
             return panel;
@@ -154,12 +242,11 @@ namespace tebenkova_wpf
             {
                 AutoGenerateColumns = false,
                 IsReadOnly = true,
-                SelectionMode = DataGridSelectionMode.Single,
-                RowDetailsVisibilityMode = DataGridRowDetailsVisibilityMode.VisibleWhenSelected
+                SelectionMode = DataGridSelectionMode.Single
             };
 
             grid.Columns.Add(new DataGridTextColumn { Header = "ID", Binding = new System.Windows.Data.Binding("Id"), Width = 50 });
-            grid.Columns.Add(new DataGridTextColumn { Header = "Тип", Binding = new System.Windows.Data.Binding("TypeName"), Width = 70 });
+            grid.Columns.Add(new DataGridTextColumn { Header = "Тип", Binding = new System.Windows.Data.Binding("TypeName"), Width = 80 });
             grid.Columns.Add(new DataGridTextColumn { Header = "Наименование", Binding = new System.Windows.Data.Binding("Name"), Width = 250 });
             grid.Columns.Add(new DataGridTextColumn { Header = "Телефон", Binding = new System.Windows.Data.Binding("Phone"), Width = 130 });
             grid.Columns.Add(new DataGridTextColumn { Header = "Email", Binding = new System.Windows.Data.Binding("Email"), Width = 180 });
@@ -172,12 +259,11 @@ namespace tebenkova_wpf
                 Width = 80
             };
 
-            var converter = new DiscountToColorConverter();
             var style = new Style(typeof(TextBlock));
             style.Setters.Add(new Setter(TextBlock.BackgroundProperty,
-                new System.Windows.Data.Binding("Discount") { Converter = converter }));
+                new System.Windows.Data.Binding("Discount") { Converter = new DiscountToColorConverter() }));
             style.Setters.Add(new Setter(TextBlock.ForegroundProperty, Brushes.White));
-            style.Setters.Add(new Setter(TextBlock.PaddingProperty, new Thickness(5)));
+            style.Setters.Add(new Setter(TextBlock.PaddingProperty, new Thickness(5, 2, 5, 2)));
             style.Setters.Add(new Setter(TextBlock.HorizontalAlignmentProperty, HorizontalAlignment.Center));
             style.Setters.Add(new Setter(TextBlock.FontWeightProperty, FontWeights.Bold));
 
@@ -292,7 +378,8 @@ namespace tebenkova_wpf
             var grid = GetCurrentDataGrid();
             if (grid?.SelectedItem == null)
             {
-                MessageBox.Show("Выберите партнера для редактирования", "Информация");
+                MessageBox.Show("Сначала выберите партнера в таблице", "Информация",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -300,7 +387,6 @@ namespace tebenkova_wpf
             var dialog = new PartnerEditWindow(selected);
             if (dialog.ShowDialog() == true)
             {
-                // Обновляем данные в списке
                 var index = _currentPartners.FindIndex(p => p.Id == selected.Id);
                 if (index >= 0)
                 {
@@ -320,7 +406,8 @@ namespace tebenkova_wpf
             var grid = GetCurrentDataGrid();
             if (grid?.SelectedItem == null)
             {
-                MessageBox.Show("Выберите партнера для удаления", "Информация");
+                MessageBox.Show("Сначала выберите партнера в таблице", "Информация",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -337,15 +424,16 @@ namespace tebenkova_wpf
         }
 
         // ==================== ВКЛАДКА ТОВАРЫ ====================
+
         private void LoadProductsTab()
         {
             var grid = new Grid();
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            var toolbar = CreateProductsToolbar();
-            Grid.SetRow(toolbar, 0);
-            grid.Children.Add(toolbar);
+            var searchPanel = CreateSearchPanel("products");
+            Grid.SetRow(searchPanel, 0);
+            grid.Children.Add(searchPanel);
 
             var dataGrid = CreateProductsDataGrid();
             Grid.SetRow(dataGrid, 1);
@@ -353,46 +441,6 @@ namespace tebenkova_wpf
 
             TabContentArea.Content = grid;
             LoadProductsData(dataGrid);
-        }
-
-        private StackPanel CreateProductsToolbar()
-        {
-            var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
-
-            panel.Children.Add(CreateButton("➕ Добавить товар", "#4CAF50", (s, e) => ShowAddProduct()));
-            panel.Children.Add(CreateButton("✏️ Редактировать", "#2196F3", (s, e) => ShowEditProduct()));
-            panel.Children.Add(CreateButton("🗑️ Удалить", "#F44336", (s, e) => DeleteProduct()));
-            panel.Children.Add(CreateButton("🔄 Обновить", "#FF9800", (s, e) => RefreshProducts()));
-
-            panel.Children.Add(new Rectangle
-            {
-                Width = 1,
-                Height = 30,
-                Fill = Brushes.LightGray,
-                Margin = new Thickness(10, 0, 10, 0),
-                VerticalAlignment = VerticalAlignment.Center
-            });
-
-            var searchBox = new TextBox
-            {
-                Width = 250,
-                Height = 38,
-                Margin = new Thickness(5),
-                Padding = new Thickness(8, 0, 8, 0),
-                VerticalContentAlignment = VerticalAlignment.Center
-            };
-            searchBox.TextChanged += (s, e) => SearchProducts(searchBox.Text);
-            panel.Children.Add(searchBox);
-
-            panel.Children.Add(new TextBlock
-            {
-                Text = "🔍",
-                VerticalAlignment = VerticalAlignment.Center,
-                FontSize = 16,
-                Margin = new Thickness(0, 0, 5, 0)
-            });
-
-            return panel;
         }
 
         private DataGrid CreateProductsDataGrid()
@@ -459,6 +507,12 @@ namespace tebenkova_wpf
 
         private void ShowAddProduct()
         {
+            // Проверяем, что список товаров существует
+            if (_currentProducts == null)
+            {
+                _currentProducts = GetTestProducts();
+            }
+
             var dialog = new ProductEditWindow();
             if (dialog.ShowDialog() == true)
             {
@@ -482,7 +536,8 @@ namespace tebenkova_wpf
             var grid = GetCurrentDataGrid();
             if (grid?.SelectedItem == null)
             {
-                MessageBox.Show("Выберите товар для редактирования", "Информация");
+                MessageBox.Show("Сначала выберите товар в таблице", "Информация",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -509,7 +564,8 @@ namespace tebenkova_wpf
             var grid = GetCurrentDataGrid();
             if (grid?.SelectedItem == null)
             {
-                MessageBox.Show("Выберите товар для удаления", "Информация");
+                MessageBox.Show("Сначала выберите товар в таблице", "Информация",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -544,6 +600,7 @@ namespace tebenkova_wpf
             if (string.IsNullOrWhiteSpace(searchText))
             {
                 grid.ItemsSource = _currentProducts;
+                TxtStatus.Text = $"✅ Всего: {_currentProducts.Count}";
             }
             else
             {
@@ -552,43 +609,35 @@ namespace tebenkova_wpf
                     p.Article.ToLower().Contains(searchText.ToLower())
                 ).ToList();
                 grid.ItemsSource = filtered;
+                TxtStatus.Text = $"🔍 Найдено: {filtered.Count} из {_currentProducts.Count}";
             }
         }
 
         // ==================== ВКЛАДКА СКЛАД ====================
+
         private void LoadWarehouseTab()
         {
             var grid = new Grid();
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
             LoadWarehouseData();
 
-            // Сводка
-            var summaryPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
+            var summaryPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 15) };
 
             var totalItems = _warehouseItems.Sum(w => w.CurrentStock);
             var needToBuy = _warehouseItems.Count(w => w.Status == "Требуется закуп");
             var outOfStock = _warehouseItems.Count(w => w.Status == "Отсутствует");
 
-            summaryPanel.Children.Add(CreateSummaryBox("Всего товаров", totalItems.ToString(), "#2196F3"));
-            summaryPanel.Children.Add(CreateSummaryBox("Требуется закуп", needToBuy.ToString(), "#FF9800"));
-            summaryPanel.Children.Add(CreateSummaryBox("Отсутствует", outOfStock.ToString(), "#F44336"));
+            summaryPanel.Children.Add(CreateSummaryBox("📦 Всего товаров", totalItems.ToString(), "#2196F3"));
+            summaryPanel.Children.Add(CreateSummaryBox("⚠️ Требуется закуп", needToBuy.ToString(), "#FF9800"));
+            summaryPanel.Children.Add(CreateSummaryBox("❌ Отсутствует", outOfStock.ToString(), "#F44336"));
 
             Grid.SetRow(summaryPanel, 0);
             grid.Children.Add(summaryPanel);
 
-            // Панель инструментов
-            var toolbar = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 10) };
-            toolbar.Children.Add(CreateButton("🔄 Обновить", "#FF9800", (s, e) => LoadWarehouseTab()));
-
-            Grid.SetRow(toolbar, 1);
-            grid.Children.Add(toolbar);
-
-            // Таблица склада
             var dataGrid = CreateWarehouseDataGrid();
-            Grid.SetRow(dataGrid, 2);
+            Grid.SetRow(dataGrid, 1);
             grid.Children.Add(dataGrid);
 
             TabContentArea.Content = grid;
@@ -601,8 +650,8 @@ namespace tebenkova_wpf
 
             var border = new Border
             {
-                Width = 150,
-                Height = 70,
+                Width = 160,
+                Height = 75,
                 Margin = new Thickness(5),
                 Background = brush,
                 CornerRadius = new CornerRadius(8)
@@ -620,7 +669,7 @@ namespace tebenkova_wpf
             {
                 Text = value,
                 Foreground = Brushes.White,
-                FontSize = 24,
+                FontSize = 26,
                 FontWeight = FontWeights.Bold,
                 HorizontalAlignment = HorizontalAlignment.Center
             });
@@ -676,18 +725,16 @@ namespace tebenkova_wpf
         }
 
         // ==================== ВКЛАДКА ОТЧЕТЫ ====================
+
         private void LoadReportsTab()
         {
             var grid = new Grid();
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
-            grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
 
-            // Заголовок
             var header = new TextBlock
             {
-                Text = "Отчеты и аналитика",
+                Text = "📊 Отчеты и аналитика",
                 FontSize = 20,
                 FontWeight = FontWeights.Bold,
                 Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#2E7D32")),
@@ -696,162 +743,66 @@ namespace tebenkova_wpf
             Grid.SetRow(header, 0);
             grid.Children.Add(header);
 
-            // Кнопки отчетов
-            var buttonsPanel = new WrapPanel { Margin = new Thickness(0, 0, 0, 15) };
+            var infoBlock = new TextBlock
+            {
+                Text = "Для формирования отчетов используйте меню \"Отчеты\" в верхней панели",
+                FontSize = 12,
+                Foreground = Brushes.Gray,
+                Margin = new Thickness(0, 0, 0, 20)
+            };
+            Grid.SetRow(infoBlock, 1);
+            grid.Children.Add(infoBlock);
 
-            buttonsPanel.Children.Add(CreateReportButton("📊 Отчет по продажам", "#4CAF50", "sales"));
-            buttonsPanel.Children.Add(CreateReportButton("📦 Отчет по товарам", "#2196F3", "products"));
-            buttonsPanel.Children.Add(CreateReportButton("💰 Финансовый отчет", "#FF9800", "finance"));
-            buttonsPanel.Children.Add(CreateReportButton("📋 Отчет по партнерам", "#9C27B0", "partners"));
-            buttonsPanel.Children.Add(CreateReportButton("📉 Складской отчет", "#F44336", "warehouse"));
-
-            Grid.SetRow(buttonsPanel, 1);
-            grid.Children.Add(buttonsPanel);
-
-            // Период отчета
-            var periodPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 15) };
-            periodPanel.Children.Add(new TextBlock { Text = "Период:", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) });
-
-            var startDatePicker = new DatePicker { Width = 120, Margin = new Thickness(5) };
-            startDatePicker.SelectedDate = DateTime.Now.AddMonths(-1);
-            periodPanel.Children.Add(startDatePicker);
-
-            periodPanel.Children.Add(new TextBlock { Text = "—", VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(5) });
-
-            var endDatePicker = new DatePicker { Width = 120, Margin = new Thickness(5) };
-            endDatePicker.SelectedDate = DateTime.Now;
-            periodPanel.Children.Add(endDatePicker);
-
-            periodPanel.Children.Add(CreateButton("Сформировать", "#4CAF50", (s, e) => GenerateReport(startDatePicker.SelectedDate, endDatePicker.SelectedDate)));
-
-            Grid.SetRow(periodPanel, 2);
-            grid.Children.Add(periodPanel);
-
-            // Область отчета
-            var reportArea = new Border
+            // Предпросмотр последних продаж
+            var previewBox = new Border
             {
                 Background = Brushes.White,
-                BorderBrush = Brushes.LightGray,
-                BorderThickness = new Thickness(1),
-                CornerRadius = new CornerRadius(5),
+                CornerRadius = new CornerRadius(8),
                 Padding = new Thickness(15),
-                Margin = new Thickness(0, 10, 0, 0)
+                BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(1)
             };
 
-            var reportStack = new StackPanel();
-
-            var reportTitle = new TextBlock
+            var previewStack = new StackPanel();
+            previewStack.Children.Add(new TextBlock
             {
-                Text = "Отчет по продажам за последний месяц",
-                FontSize = 16,
+                Text = "📋 Последние продажи",
+                FontSize = 14,
                 FontWeight = FontWeights.Bold,
                 Margin = new Thickness(0, 0, 0, 10)
-            };
-            reportStack.Children.Add(reportTitle);
+            });
 
-            _salesData = GetTestSalesData();
+            if (_salesData == null) _salesData = GetTestSalesData();
 
-            var reportGrid = new DataGrid
+            var previewGrid = new DataGrid
             {
                 AutoGenerateColumns = false,
                 IsReadOnly = true,
                 Height = 200,
                 Margin = new Thickness(0, 0, 0, 10)
             };
+            previewGrid.Columns.Add(new DataGridTextColumn { Header = "Дата", Binding = new System.Windows.Data.Binding("Date") { StringFormat = "dd.MM.yyyy" }, Width = 100 });
+            previewGrid.Columns.Add(new DataGridTextColumn { Header = "Товар", Binding = new System.Windows.Data.Binding("ProductName"), Width = 200 });
+            previewGrid.Columns.Add(new DataGridTextColumn { Header = "Кол-во", Binding = new System.Windows.Data.Binding("Quantity"), Width = 80 });
+            previewGrid.Columns.Add(new DataGridTextColumn { Header = "Сумма", Binding = new System.Windows.Data.Binding("Amount") { StringFormat = "{0:N2} ₽" }, Width = 120 });
+            previewGrid.ItemsSource = _salesData.Take(5);
+            previewStack.Children.Add(previewGrid);
 
-            reportGrid.Columns.Add(new DataGridTextColumn { Header = "Дата", Binding = new System.Windows.Data.Binding("Date") { StringFormat = "dd.MM.yyyy" }, Width = 100 });
-            reportGrid.Columns.Add(new DataGridTextColumn { Header = "Товар", Binding = new System.Windows.Data.Binding("ProductName"), Width = 200 });
-            reportGrid.Columns.Add(new DataGridTextColumn { Header = "Количество", Binding = new System.Windows.Data.Binding("Quantity"), Width = 80 });
-            reportGrid.Columns.Add(new DataGridTextColumn { Header = "Сумма", Binding = new System.Windows.Data.Binding("Amount") { StringFormat = "{0:N2} ₽" }, Width = 120 });
+            var totalText = new TextBlock
+            {
+                Text = $"💰 Общая выручка за период: {_salesData.Sum(s => s.Amount):N2} ₽",
+                FontSize = 13,
+                FontWeight = FontWeights.Bold,
+                Foreground = Brushes.Green,
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            previewStack.Children.Add(totalText);
 
-            reportGrid.ItemsSource = _salesData;
-            reportStack.Children.Add(reportGrid);
-
-            var totalPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
-            totalPanel.Children.Add(new TextBlock { Text = "Итого: ", FontWeight = FontWeights.Bold, FontSize = 14 });
-            totalPanel.Children.Add(new TextBlock { Text = $"{_salesData.Sum(s => s.Amount):N2} ₽", FontSize = 14, Foreground = Brushes.Green, FontWeight = FontWeights.Bold });
-
-            reportStack.Children.Add(totalPanel);
-
-            reportArea.Child = reportStack;
-            Grid.SetRow(reportArea, 3);
-            grid.Children.Add(reportArea);
+            previewBox.Child = previewStack;
+            Grid.SetRow(previewBox, 2);
+            grid.Children.Add(previewBox);
 
             TabContentArea.Content = grid;
-        }
-
-        private Button CreateReportButton(string text, string color, string reportType)
-        {
-            var brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
-            var button = new Button
-            {
-                Content = text,
-                Height = 40,
-                Width = 160,
-                Margin = new Thickness(5),
-                Background = brush,
-                Foreground = Brushes.White,
-                FontWeight = FontWeights.SemiBold,
-                BorderThickness = new Thickness(0),
-                Cursor = System.Windows.Input.Cursors.Hand,
-                Tag = reportType
-            };
-            button.Click += (s, e) => ShowReport(button.Tag.ToString());
-            return button;
-        }
-
-        private void ShowReport(string reportType)
-        {
-            switch (reportType)
-            {
-                case "sales":
-                    MessageBox.Show("Отчет по продажам сформирован", "Информация");
-                    break;
-
-                case "products":
-                    MessageBox.Show($"Отчет по товарам\n\nВсего товаров: {_currentProducts.Count}\nОбщая стоимость: {_currentProducts.Sum(p => p.Price * p.StockQuantity):N2} ₽", "Отчет по товарам");
-                    break;
-
-                case "finance":
-                    var totalSales = _salesData?.Sum(s => s.Amount) ?? 0;
-                    // Исправлено: конвертируем 0.3 в decimal
-                    decimal profitMargin = 0.3m;
-                    MessageBox.Show($"Финансовый отчет\n\nВыручка: {totalSales:N2} ₽\nПрибыль: {totalSales * profitMargin:N2} ₽", "Финансовый отчет");
-                    break;
-
-                case "partners":
-                    decimal avgDiscount = 0;
-                    if (_currentPartners != null && _currentPartners.Count > 0)
-                    {
-                        avgDiscount = (decimal)_currentPartners.Average(p => p.Discount);
-                    }
-                    MessageBox.Show($"Отчет по партнерам\n\nВсего партнеров: {_currentPartners?.Count ?? 0}\nСредняя скидка: {avgDiscount:F1}%", "Отчет по партнерам");
-                    break;
-
-                case "warehouse":
-                    var needToBuy = 0;
-                    var totalStock = 0;
-
-                    if (_warehouseItems != null)
-                    {
-                        needToBuy = _warehouseItems.Count(w => w.Status == "Требуется закуп" || w.Status == "Отсутствует");
-                        totalStock = _warehouseItems.Sum(w => w.CurrentStock);
-                    }
-
-                    MessageBox.Show($"Складской отчет\n\nТребуется закупить: {needToBuy} позиций\nВсего товаров на складе: {totalStock} шт", "Складской отчет");
-                    break;
-            }
-        }
-
-        private void GenerateReport(DateTime? startDate, DateTime? endDate)
-        {
-            if (!startDate.HasValue || !endDate.HasValue)
-            {
-                MessageBox.Show("Выберите период", "Предупреждение");
-                return;
-            }
-
-            MessageBox.Show($"Отчет с {startDate.Value:dd.MM.yyyy} по {endDate.Value:dd.MM.yyyy} сформирован", "Информация");
         }
 
         private List<SaleDto> GetTestSalesData()
@@ -860,11 +811,11 @@ namespace tebenkova_wpf
             var rnd = new Random();
             string[] products = { "Роза красная", "Роза белая", "Тюльпан желтый", "Горшок керамический", "Грунт универсальный" };
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 15; i++)
             {
                 data.Add(new SaleDto
                 {
-                    Date = DateTime.Now.AddDays(-rnd.Next(1, 30)),
+                    Date = DateTime.Now.AddDays(-rnd.Next(1, 60)),
                     ProductName = products[rnd.Next(products.Length)],
                     Quantity = rnd.Next(1, 20),
                     Amount = rnd.Next(1000, 20000)
